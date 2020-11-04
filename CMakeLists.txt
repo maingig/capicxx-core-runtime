@@ -42,6 +42,11 @@ SET(RPM_PACKAGE_VERSION "r0" CACHE STRING "rpm packet version") # used in e.g. c
 SET(MAX_LOG_LEVEL "DEBUG" CACHE STRING "maximum log level")
 message(STATUS "MAX_LOG_LEVEL is set to value: ${MAX_LOG_LEVEL}")
 
+set (LIBRARY_TYPE "STATIC")
+if (BUILD_SHARED_LIBS)
+    set (LIBRARY_TYPE "SHARED")
+endif()
+
 # Set a default build type if none was specified
 set(default_build_type "RelWithDebInfo")
 if(NOT CMAKE_BUILD_TYPE)
@@ -142,7 +147,7 @@ link_directories(
 
 file(GLOB CAPI_SRCS "src/CommonAPI/*.cpp")
 list(SORT CAPI_SRCS)
-add_library(CommonAPI SHARED ${CAPI_SRCS})
+add_library(CommonAPI ${LIBRARY_TYPE} ${CAPI_SRCS})
 target_link_libraries(CommonAPI PRIVATE ${DL_LIBRARY} ${DLT_LIBRARIES})
 set_target_properties(CommonAPI PROPERTIES VERSION ${LIBCOMMONAPI_MAJOR_VERSION}.${LIBCOMMONAPI_MINOR_VERSION}.${LIBCOMMONAPI_PATCH_VERSION} SOVERSION ${LIBCOMMONAPI_MAJOR_VERSION}.${LIBCOMMONAPI_MINOR_VERSION}.${LIBCOMMONAPI_PATCH_VERSION} LINKER_LANGUAGE C)
 set_target_properties (CommonAPI PROPERTIES INTERFACE_LINK_LIBRARY "")
