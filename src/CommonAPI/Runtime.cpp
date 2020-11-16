@@ -30,7 +30,7 @@ std::map<std::string, std::string> properties__;
 static std::shared_ptr<Runtime> * theRuntimePtr__;
 static std::mutex getMutex__;
 
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(__QNX__)  
 DEINITIALIZER(RuntimeDeinit) {
     if (theRuntimePtr__) {
         std::lock_guard<std::mutex> itsLock(getMutex__);
@@ -107,7 +107,7 @@ Runtime::registerFactory(const std::string &_binding, std::shared_ptr<Factory> _
 
 bool
 Runtime::unregisterFactory(const std::string &_binding) {
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(__QNX__)  
     std::lock_guard<std::mutex> itsLock(factoriesMutex_);
 #endif
     if (_binding == defaultBinding_) {
